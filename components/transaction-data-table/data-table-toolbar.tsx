@@ -1,55 +1,64 @@
 "use client"
 
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
-import { Row } from "@tanstack/react-table"
+import { Cross2Icon } from "@radix-ui/react-icons"
+import { Table } from "@tanstack/react-table"
+import {DataTableFacetedFilter} from "@/components/transaction-data-table/data-table-faceted-filter";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {DataTableViewOptions} from "@/components/transaction-data-table/data-table-view-options";
+import {PizzaIcon, PlaneIcon} from "lucide-react";
 
-import { taskSchema } from "../data/schema"
-
-
-
-interface DataTableRowActionsProps<TData> {
-    row: Row<TData>
+interface DataTableToolbarProps<TData> {
+    table: Table<TData>
 }
 
-export function DataTableRowActions<TData>({
-                                               row,
-                                           }: DataTableRowActionsProps<TData>) {
-    const task = taskSchema.parse(row.original)
+const categories = [
+    {
+        value: "Food and Drink",
+        label: "Food and Drink",
+        icon: PizzaIcon,
+    },
+    {
+        value: "Travel",
+        label: "Travel",
+        icon: PlaneIcon,
+    },
+]
+
+export function DataTableToolbar<TData>({
+                                            table,
+                                        }: DataTableToolbarProps<TData>) {
+    const isFiltered = table.getState().columnFilters.length > 0
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button
-                    variant="ghost"
-                    className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-                >
-                    <DotsHorizontalIcon className="h-4 w-4" />
-                    <span className="sr-only">Open menu</span>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[160px]">
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Make a copy</DropdownMenuItem>
-                <DropdownMenuItem>Favorite</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                        <DropdownMenuRadioGroup value={task.label}>
-                            {labels.map((label) => (
-                                <DropdownMenuRadioItem key={label.value} value={label.value}>
-                                    {label.label}
-                                </DropdownMenuRadioItem>
-                            ))}
-                        </DropdownMenuRadioGroup>
-                    </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                    Delete
-                    <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center justify-between">
+            <div className="flex flex-1 items-center space-x-2">
+                <Input
+                    placeholder="Search transactions..."
+                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                    onChange={(event) =>
+                        table.getColumn("name")?.setFilterValue(event.target.value)
+                    }
+                    className="h-8 w-[150px] lg:w-[250px]"
+                />
+                {table.getColumn("category") && (
+                    <DataTableFacetedFilter
+                        column={table.getColumn("category")}
+                        title="Categories"
+                        options={categories}
+                    />
+                )}
+                {isFiltered && (
+                    <Button
+                        variant="ghost"
+                        onClick={() => table.resetColumnFilters()}
+                        className="h-8 px-2 lg:px-3"
+                    >
+                        Reset
+                        <Cross2Icon className="ml-2 h-4 w-4" />
+                    </Button>
+                )}
+            </div>
+        </div>
     )
 }
