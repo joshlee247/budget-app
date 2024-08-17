@@ -4,6 +4,7 @@ import "./globals.css";
 import PlaidLink from "@/components/plaid-link";
 import {TooltipProvider} from "@/components/ui/tooltip";
 import Sidebar from "@/components/sidebar";
+import MobileNav from "@/components/mobile-nav";
 
 const inter = Inter({ subsets: ["latin"] });
 

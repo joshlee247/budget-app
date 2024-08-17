@@ -15,12 +15,27 @@ interface DataTableToolbarProps<TData> {
 const categories = [
     {
         value: "Food and Drink",
-        label: "Food and Drink",
+        label: "Food & drink",
         icon: PizzaIcon,
     },
     {
         value: "Travel",
         label: "Travel",
+        icon: PlaneIcon,
+    },
+    {
+        value: "Entertainment",
+        label: "Entertainment",
+        icon: PlaneIcon,
+    },
+    {
+        value: "Transportation",
+        label: "Transportation",
+        icon: PlaneIcon,
+    },
+    {
+        value: "Payment",
+        label: "Payment",
         icon: PlaneIcon,
     },
 ]
